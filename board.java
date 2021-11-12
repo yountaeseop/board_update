@@ -4,26 +4,27 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class board {
-
-	ArrayList<String> titles = new ArrayList<>();
-	ArrayList<String> contents = new ArrayList<>();
-	ArrayList<Integer> numbers = new ArrayList<>();
 	
-	int num = 1; //게시물 번호
+	ArrayList<Integer> numbers = new ArrayList<Integer>();
+	ArrayList<String> titles = new ArrayList<String>();
+	ArrayList<String> contents = new ArrayList<String>();
+	Scanner sc = new Scanner(System.in);
 	
-	public void runBoard() {
-		Scanner sc = new Scanner(System.in);
+	int num = 1; // 게시물 등록번호
+	
+	public void run_board() {
+		
 		
 		while(true) {
-			System.out.print("명령어를 입력해주세요 :");
+			
+			System.out.print("명령어를 입력해주세요:");
 			String order = sc.nextLine();
 			
-			
-			if(order.equals("help")) { // 도움말
+			if(order.equals("help")) {
 				System.out.println("add : 게시물 등록");
 				System.out.println("list : 게시물 목록 조회");
 			}
-			else if(order.equals("add")) { //추가
+			else if(order.equals("add")) {
 				
 				numbers.add(num);
 				
@@ -35,50 +36,48 @@ public class board {
 				String content = sc.nextLine();
 				contents.add(content);
 				
+				num++; // 게시물 등록번호 자동증가
+				
 				System.out.println("게시물이 저장되었습니다.");
-				num++; // 번호 자동 증가.
 			}
-
-			else if(order.equals("list")) { // 조회
+			else if(order.equals("list")) {
 				list();
 			}
-			else if(order.equals("update")) { // 수정
-				
+			else if(order.equals("update")) {
 				System.out.print("수정할 게시물 번호:");
-				int targetNo = Integer.parseInt(sc.nextLine());
-										
-				// 여기 반복문 코드를 이해하는 것이 핵심!!!!!!!
+				int targetNum = Integer.parseInt(sc.nextLine());
 				
-				 int targetIndex = getIndexOfArticleNo(targetNo);
+				int standard = standard(targetNum);
+				// standard의 값을 초기화시키는 반복문 -> 거름망 역할을 함
 				
-				if(targetIndex == -1) {
+				if(standard == -1) {
 					System.out.println("없는 게시물입니다.");
 				} else {
-					System.out.print("새제목 :");
+					System.out.print("제목:");
 					String title = sc.nextLine();
-					titles.set(targetIndex, title);
-					
-					System.out.print("새내용 :");
+					titles.set(standard, title);
+					System.out.print("내용:");
 					String content = sc.nextLine();
-					contents.set(targetIndex, content);
+					contents.set(standard, content);
 					
 					System.out.println("수정이 완료되었습니다.");
-					
-					list();
-				}	
+				}
+				
+				
+				list();
 			}
-			else if(order.equals("delete")) {
-				System.out.println("삭제할 게시물 번호 :");
-				int targetNo = Integer.parseInt(sc.nextLine());
+			else if(order.equals("delete")){
+				System.out.println("삭제할 게시물 번호:");
+				int targetNum = Integer.parseInt(sc.nextLine());
 				
-				int ArticleNo = getIndexOfArticleNo(targetNo);
-				
-				if(ArticleNo == -1) {
-					System.out.println("없는 게시물 번호입니다.");
+				int standard = standard(targetNum);
+			
+				if(standard == -1) {
+					System.out.println("없는 게시물 번호 입니다.");
 				} else {
-					numbers.remove(ArticleNo);
-					titles.remove(ArticleNo);
-					contents.remove(ArticleNo);
+					numbers.remove(standard);
+					titles.remove(standard);
+					contents.remove(standard);
 					System.out.println("삭제가 완료되었습니다.");
 					
 					list();
@@ -87,33 +86,36 @@ public class board {
 			}
 			
 			
-			
+			System.out.println("================");
 		}
+		
+		
 	}
 
-	private int getIndexOfArticleNo(int targetNo) {
-		for(int i = 0; i < numbers.size(); i++) {
-			int currentNo = numbers.get(i);
-			if(targetNo == currentNo) {
-				return i; // 여기 반복문 코드를 이해하는 것이 핵심!!!!!!!
-				
+	public int standard(int targetNum) {
+		
+		for(int i = 0; i < numbers.size(); i++){
+			int currentNum = numbers.get(i);
+			if(targetNum == currentNum) {
+				return i; // return하면 함수가 그 즉시 종료
 			}
 		}
-		return -1;
+		return -1; // 위에 반복문을 끝까지 돌았음에도 불구하고
+				   // if문 조건이 맞지 않아서 return이 안될 수도 있다.
+				   // 그러면 리턴하는 값이 없기때문에 실행이 안됨
+				   // return하는 값을 넣어줘야하기때문에 -1을 넣어야함.	
+		
 	}
 
 	public void list() {
 		for(int i = 0; i < titles.size(); i++) {
-			System.out.print("번호 :");
-			System.out.println(numbers.get(i));
-			System.out.print("제목 :");
-			System.out.println(titles.get(i));
-			System.out.print("내용 :");
-			System.out.println(contents.get(i));
-			System.out.println("----------------");
+			System.out.println("번호 :" + numbers.get(i));
+			System.out.println("제목 :" + titles.get(i));
+			System.out.println("내용 :" + contents.get(i));
 		}
 		
 	}
+	
+	
+	
 }
-
-
