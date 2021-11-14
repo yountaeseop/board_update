@@ -23,7 +23,7 @@ public class board {
 			}else if(order.equals("add")) {
 				addArticle();
 			}else if(order.equals("list")) {
-				list();
+				list(Articles);
 			}else if(order.equals("update")) {
 				updateArticle(); 
 			}else if(order.equals("delete")){
@@ -36,10 +36,20 @@ public class board {
 	}
 
 	private void searchArticle() {
+		System.out.println("검색키워드를 입력해주세요:");
+		String targetword = sc.nextLine();
 		
+		ArrayList<Article> searchedArticles = new ArrayList<>();
 		
+		for(int i = 0; i < Articles.size(); i++) {
+			if(Articles.get(i).title.contains(targetword)) {
+				searchedArticles.add(Articles.get(i));
+			}
+		}
+		
+		list(searchedArticles);
 	}
-
+	
 	private void deleteArticle() {
 		System.out.println("삭제할 게시물 번호:");
 		int targetNum = Integer.parseInt(sc.nextLine());
@@ -54,7 +64,7 @@ public class board {
 			
 			System.out.println("삭제가 완료되었습니다.");
 			
-			list();
+			list(Articles);
 		}
 		
 		
@@ -84,7 +94,7 @@ public class board {
 		}
 		
 		
-		list();
+		list(Articles);
 		
 	}
 
@@ -128,7 +138,7 @@ public class board {
 		
 	}
 
-	public void list() {
+	public void list(ArrayList<Article> list) { // 매개변수로 리스트를 부여해서 중복없이 출력
 		for(int i = 0; i < Articles.size(); i++) {
 			Article Article = Articles.get(i);
 			
