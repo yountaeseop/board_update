@@ -5,9 +5,8 @@ import java.util.Scanner;
 
 public class board {
 	
-	ArrayList<Integer> numbers = new ArrayList<Integer>();
-	ArrayList<String> titles = new ArrayList<String>();
-	ArrayList<String> contents = new ArrayList<String>();
+	ArrayList<Article> Articles = new ArrayList<>(); 
+	
 	Scanner sc = new Scanner(System.in);
 	
 	int num = 1; // 게시물 등록번호
@@ -22,19 +21,22 @@ public class board {
 			if(order.equals("help")) {
 				System.out.println("add : 게시물 등록");
 				System.out.println("list : 게시물 목록 조회");
+				System.out.println("update : 게시물 수정");
+				System.out.println("delete : 게시물 삭제");
+				System.out.println("search : 게시물 검색");
 			}
 			else if(order.equals("add")) {
 				
-				numbers.add(num);
 				
 				System.out.print("제목을 입력해주세요:");
 				String title = sc.nextLine();
-				titles.add(title);
 				
 				System.out.print("내용을 입력해주세요:");
 				String content = sc.nextLine();
-				contents.add(content);
 				
+				Article Article = new Article(num, title, content);
+				Articles.add(Article);
+			
 				num++; // 게시물 등록번호 자동증가
 				
 				System.out.println("게시물이 저장되었습니다.");
@@ -54,10 +56,13 @@ public class board {
 				} else {
 					System.out.print("제목:");
 					String title = sc.nextLine();
-					titles.set(standard, title);
 					System.out.print("내용:");
 					String content = sc.nextLine();
-					contents.set(standard, content);
+					
+					
+					Article  Article = new Article(targetNum, title, content);
+					Articles.set(standard, Article);
+					
 					
 					System.out.println("수정이 완료되었습니다.");
 				}
@@ -74,9 +79,9 @@ public class board {
 				if(standard == -1) {
 					System.out.println("없는 게시물 번호 입니다.");
 				} else {
-					numbers.remove(standard);
-					titles.remove(standard);
-					contents.remove(standard);
+					
+					Articles.remove(standard);
+					
 					System.out.println("삭제가 완료되었습니다.");
 					
 					list();
@@ -93,9 +98,9 @@ public class board {
 
 	public int standard(int targetNum) {
 		
-		for(int i = 0; i < numbers.size(); i++){
-			int currentNum = numbers.get(i);
-			if(targetNum == currentNum) {
+		for(int i = 0; i < Articles.size(); i++){
+			Article currentArticle = Articles.get(i);
+			if(targetNum == currentArticle.id) {
 				return i; // return하면 함수가 그 즉시 종료
 			}
 		}
@@ -107,10 +112,12 @@ public class board {
 	}
 
 	public void list() {
-		for(int i = 0; i < titles.size(); i++) {
-			System.out.println("번호 :" + numbers.get(i));
-			System.out.println("제목 :" + titles.get(i));
-			System.out.println("내용 :" + contents.get(i));
+		for(int i = 0; i < Articles.size(); i++) {
+			Article Article = Articles.get(i);
+			
+			System.out.println("번호 :" + Article.id);
+			System.out.println("제목 :" + Article.title);
+			System.out.println("내용 :" + Article.content);
 		}
 		
 	}
