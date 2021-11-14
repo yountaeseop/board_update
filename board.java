@@ -14,7 +14,6 @@ public class board {
 	
 	public void run_board() {
 		
-		
 		while(true) {
 			
 			System.out.print("명령어를 입력해주세요:");
