@@ -5,13 +5,21 @@ public class Article {
 	int id;
 	String title;
 	String content;
+	String regDate;
+	String writer;
+	int hit;
 	
-	public Article(int id, String title, String content) {
+	public Article(int id, String title, String content, String regDate, String writer, int hit) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.content = content;
+		this.regDate = regDate;
+		this.writer = writer;
+		this.hit = hit;
 	}
+	
+	
 	
 //	public Artile(int id, String title, String content) {
 //		this.id = id;

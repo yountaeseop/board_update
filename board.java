@@ -40,9 +40,9 @@ public class board {
 	}
 
 	private void makeTestData() {
-		Articles.add(new Article(1, "아1령하세연", "내용1입니다."));
-		Articles.add(new Article(2, "아2령하세연", "내용2입니다."));
-		Articles.add(new Article(3, "아3령하세연", "내용3입니다."));
+		Articles.add(new Article(1, "안녕하세요", "내용1입니다.",Myutill.getDate("yyyy-MM-dd"), "익명", 0));
+		Articles.add(new Article(2, "반갑하세요", "내용2입니다.",Myutill.getDate("yyyy.MM.dd"), "익명", 0));
+		Articles.add(new Article(3, "안녕안녕", "내용3입니다.",Myutill.getDate("yyyy/MM/dd"), "익명", 0));
 		
 	}
 
@@ -97,8 +97,8 @@ public class board {
 			String content = sc.nextLine();
 			
 			
-			Article  Article = new Article(targetNum, title, content);
-			Articles.set(standard, Article);
+			Article article = new Article(targetNum, title, content,"2021.11.15", "익명", 0);
+			Articles.set(standard, article);
 			
 			
 			System.out.println("수정이 완료되었습니다.");
@@ -116,8 +116,9 @@ public class board {
 		System.out.print("내용을 입력해주세요:");
 		String content = sc.nextLine();
 		
-		Article Article = new Article(num, title, content);
-		Articles.add(Article);
+		String currentDate = Myutill.getDate("yyyy.MM.dd");
+		Article article = new Article(num, title, content,currentDate, "익명", 0);
+		Articles.add(article);
 	
 		num++; // 게시물 등록번호 자동증가
 		
@@ -150,12 +151,15 @@ public class board {
 	}
 
 	public void list(ArrayList<Article> list) { // 매개변수로 리스트를 부여해서 중복없이 출력
-		for(int i = 0; i < Articles.size(); i++) {
-			Article Article = Articles.get(i);
+		for(int i = 0; i < list.size(); i++) {
+			System.out.println("번호 :" + list.get(i).id);
+			System.out.println("제목 :" + list.get(i).title);
+			System.out.println("내용 :" + list.get(i).content);
+			System.out.println("등록날짜 :" + list.get(i).regDate);
+			System.out.println("작성자 :" + list.get(i).writer);
+			System.out.println("조회수 :" + list.get(i).hit);
 			
-			System.out.println("번호 :" + Article.id);
-			System.out.println("제목 :" + Article.title);
-			System.out.println("내용 :" + Article.content);
+			System.out.println("----------------");
 		}
 		
 	}
