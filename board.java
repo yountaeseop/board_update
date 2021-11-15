@@ -11,6 +11,10 @@ public class board {
 	
 	int num = 1; // 게시물 등록번호
 	
+	public board(){ //board 클래스의 생성자 이용
+		makeTestData(); // 테스트 데이터 만들기
+	}
+	
 	public void run_board() {
 		
 		while(true) {
@@ -33,6 +37,13 @@ public class board {
 			}
 			System.out.println("================");
 		}	
+	}
+
+	private void makeTestData() {
+		Articles.add(new Article(1, "아1령하세연", "내용1입니다."));
+		Articles.add(new Article(2, "아2령하세연", "내용2입니다."));
+		Articles.add(new Article(3, "아3령하세연", "내용3입니다."));
+		
 	}
 
 	private void searchArticle() {
