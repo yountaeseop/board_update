@@ -9,7 +9,7 @@ public class board {
 	
 	ArrayList<Article> articles = new ArrayList<>(); 
 	ArrayList<Members> member = new ArrayList<>();
-	ArrayList<Members> loginmember = new ArrayList<>();
+	Members loginedmember; // 로그인 유저정보
 	
 	Scanner sc = new Scanner(System.in);
 	
@@ -23,7 +23,11 @@ public class board {
 		
 		while(true) {
 			
-			System.out.print("명령어를 입력해주세요:");
+			if(loginedmember == null) {
+				System.out.print("명령어를 입력해주세요:");
+			}else {
+				System.out.print("명령어를 입력해주세요["+loginedmember.nickname+"("+loginedmember.loginId+")]:");				
+			}
 			String order = sc.nextLine();
 			
 			if(order.equals("help")) {
@@ -41,18 +45,39 @@ public class board {
 			}else if(order.equals("read")) {
 				readArticle();
 			}else if(order.equals("signup")) {
-				signupArticle();
+				signup();
 			}else if(order.equals("login")) {
-				//loginArticle();
+				login();
 			}
 				
 			System.out.println("================");
 		}	
 	}
+	
+	private void login() {
+		System.out.print("아이디:");
+		String loginId = sc.nextLine();
+		System.out.print("비밀번호:");
+		String loginPw = sc.nextLine();
+		
+		boolean isexistLoginId = false; 
+		
+		for(int i = 0; i < member.size(); i++) { //String이 동일할땐 .equals()를 사용!!!
+			Members members = member.get(i);
+			if(members.loginId.equals(loginId) && members.loginPw.equals(loginPw)) {
+				System.out.println(members.nickname +"님 환영합니다!");
+				loginedmember = members;
+				isexistLoginId = true;
+				break;
+			}
+		}
+		if(isexistLoginId == false) {
+			System.out.println("비밀번호가 틀렸거나 잘못된 회원정보입니다.");
+		}
+		
+	}
 
-
-
-	private void signupArticle() {
+	private void signup() {
 		
 		System.out.println("==== 회원 가입을 진행합니다 ====");
 		System.out.print("아이디를 입력해주세요 :");
