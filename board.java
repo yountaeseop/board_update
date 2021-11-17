@@ -3,13 +3,17 @@ package Board;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import Board.utill.Myutill;
+
 public class board {
 	
-	ArrayList<Article> Articles = new ArrayList<>(); 
+	ArrayList<Article> articles = new ArrayList<>(); 
+	ArrayList<Members> member = new ArrayList<>();
+	ArrayList<Members> loginmember = new ArrayList<>();
 	
 	Scanner sc = new Scanner(System.in);
 	
-	int num = 1; // 게시물 등록번호
+	int num = 4; // 게시물 등록번호
 	
 	public board(){ //board 클래스의 생성자 이용
 		makeTestData(); // 테스트 데이터 만들기
@@ -27,22 +31,76 @@ public class board {
 			}else if(order.equals("add")) {
 				addArticle();
 			}else if(order.equals("list")) {
-				list(Articles);
+				list(articles);
 			}else if(order.equals("update")) {
 				updateArticle(); 
 			}else if(order.equals("delete")){
 				deleteArticle();
 			}else if(order.equals("search")) {
 				searchArticle();
+			}else if(order.equals("read")) {
+				readArticle();
+			}else if(order.equals("signup")) {
+				signupArticle();
+			}else if(order.equals("login")) {
+				//loginArticle();
 			}
+				
 			System.out.println("================");
 		}	
 	}
 
+
+
+	private void signupArticle() {
+		
+		System.out.println("==== 회원 가입을 진행합니다 ====");
+		System.out.print("아이디를 입력해주세요 :");
+		String loginId = sc.nextLine();
+		System.out.print("비밀번호를 입력해주세요 :");
+		String loginPw = sc.nextLine();
+		System.out.print("닉네임을 입력해주세요 :");
+		String nickname = sc.nextLine();
+		
+		Members members = new Members(loginId, loginPw, nickname);
+		member.add(members);
+		
+	    System.out.println("==== 회원가입이 완료되었습니다. ====");
+		
+	}
+
+	private void readArticle() {
+		System.out.print("상세보기할 게시물 번호를 입력해주세요:");
+		int targetNum = Integer.parseInt(sc.nextLine());
+		
+		int standard = standard(targetNum);
+		// standard의 값을 초기화시키는 반복문 -> 거름망 역할을 함
+		
+		if(standard == -1) {
+			System.out.println("없는 게시물입니다.");
+		} else { 
+			Article article = articles.get(standard);
+			
+			article.hit++; //조회수 증가
+			
+			System.out.println("===="+targetNum+"번 게시물 ====");
+			System.out.println("번호 :"+article.id);
+		    System.out.println("제목 :"+article.title);
+			System.out.println("-------------------");
+			System.out.println("내용 :"+article.content);
+			System.out.println("-------------------");
+			System.out.println("작성자 :"+article.writer);
+			System.out.println("등록날짜:"+article.regDate);
+			System.out.println("===================");
+			System.out.println("조회수:"+article.hit);
+		}
+		
+	}
+
 	private void makeTestData() {
-		Articles.add(new Article(1, "안녕하세요", "내용1입니다.",Myutill.getDate("yyyy-MM-dd"), "익명", 0));
-		Articles.add(new Article(2, "반갑하세요", "내용2입니다.",Myutill.getDate("yyyy.MM.dd"), "익명", 0));
-		Articles.add(new Article(3, "안녕안녕", "내용3입니다.",Myutill.getDate("yyyy/MM/dd"), "익명", 0));
+		articles.add(new Article(1, "안녕하세요", "내용1입니다.",Myutill.getDate("yyyy-MM-dd"), "익명", 0));
+		articles.add(new Article(2, "반갑하세요", "내용2입니다.",Myutill.getDate("yyyy.MM.dd"), "익명", 0));
+		articles.add(new Article(3, "안녕안녕", "내용3입니다.",Myutill.getDate("yyyy/MM/dd"), "익명", 0));
 		
 	}
 
@@ -52,9 +110,9 @@ public class board {
 		
 		ArrayList<Article> searchedArticles = new ArrayList<>();
 		
-		for(int i = 0; i < Articles.size(); i++) {
-			if(Articles.get(i).title.contains(targetword)) {
-				searchedArticles.add(Articles.get(i));
+		for(int i = 0; i < articles.size(); i++) {
+			if(articles.get(i).title.contains(targetword)) {
+				searchedArticles.add(articles.get(i));
 			}
 		}
 		
@@ -71,11 +129,11 @@ public class board {
 			System.out.println("없는 게시물 번호 입니다.");
 		} else {
 			
-			Articles.remove(standard);
+			articles.remove(standard);
 			
 			System.out.println("삭제가 완료되었습니다.");
 			
-			list(Articles);
+			list(articles);
 		}
 		
 		
@@ -98,14 +156,14 @@ public class board {
 			
 			
 			Article article = new Article(targetNum, title, content,"2021.11.15", "익명", 0);
-			Articles.set(standard, article);
+			articles.set(standard, article);
 			
 			
 			System.out.println("수정이 완료되었습니다.");
 		}
 		
 		
-		list(Articles);
+		list(articles);
 		
 	}
 
@@ -118,7 +176,7 @@ public class board {
 		
 		String currentDate = Myutill.getDate("yyyy.MM.dd");
 		Article article = new Article(num, title, content,currentDate, "익명", 0);
-		Articles.add(article);
+		articles.add(article);
 	
 		num++; // 게시물 등록번호 자동증가
 		
@@ -137,8 +195,8 @@ public class board {
 
 	public int standard(int targetNum) {
 		
-		for(int i = 0; i < Articles.size(); i++){
-			Article currentArticle = Articles.get(i);
+		for(int i = 0; i < articles.size(); i++){
+			Article currentArticle = articles.get(i);
 			if(targetNum == currentArticle.id) {
 				return i; // return하면 함수가 그 즉시 종료
 			}
@@ -154,7 +212,7 @@ public class board {
 		for(int i = 0; i < list.size(); i++) {
 			System.out.println("번호 :" + list.get(i).id);
 			System.out.println("제목 :" + list.get(i).title);
-			System.out.println("내용 :" + list.get(i).content);
+			//System.out.println("내용 :" + list.get(i).content);
 			System.out.println("등록날짜 :" + list.get(i).regDate);
 			System.out.println("작성자 :" + list.get(i).writer);
 			System.out.println("조회수 :" + list.get(i).hit);
