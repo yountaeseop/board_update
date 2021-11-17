@@ -123,9 +123,12 @@ public class board {
 	}
 
 	private void makeTestData() {
-		articles.add(new Article(1, "안녕하세요", "내용1입니다.",Myutill.getDate("yyyy-MM-dd"), "익명", 0));
-		articles.add(new Article(2, "반갑하세요", "내용2입니다.",Myutill.getDate("yyyy.MM.dd"), "익명", 0));
-		articles.add(new Article(3, "안녕안녕", "내용3입니다.",Myutill.getDate("yyyy/MM/dd"), "익명", 0));
+		String currentDate = Myutill.getDate("yyyy-MM-dd");
+		articles.add(new Article(1, "안녕하세요", "내용1입니다.",currentDate, "윤태섭", 0));
+		articles.add(new Article(2, "반갑하세요", "내용2입니다.",currentDate, "광폭철", 0));
+		articles.add(new Article(3, "안녕안녕", "내용3입니다.",currentDate, "dbsxotjq", 0));
+		member.add(new Members("dbsxotjq","dbsxotjq","dbsxotjq") );
+		member.add(new Members("광폭철","광폭철","광폭철") );
 		
 	}
 
