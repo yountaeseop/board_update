@@ -10,11 +10,10 @@ public class board {
 	ArrayList<Article> articles = new ArrayList<>(); 
 	ArrayList<Members> member = new ArrayList<>();
 	ArrayList<Reply> replies = new ArrayList<>();
-	
-	Members loginedmember; // 로그인 유저정보
-	
+		
 	Scanner sc = new Scanner(System.in);
 	String dateFormat = "yyyy.MM.dd";
+	Members loginedmember = null; // 로그인 유저정보
 	
 	int articleNum = 4; // 게시물 등록번호
 	int memberNum = 3; // 회원등록 번호
@@ -170,29 +169,58 @@ public class board {
 			
 			standard.hit++; //조회수 증가
 			
-			System.out.println("===="+targetNum+"번 게시물 ====");
-			System.out.println("번호 :"+standard.id);
-		    System.out.println("제목 :"+standard.title);
-			System.out.println("-------------------");
-			System.out.println("내용 :"+standard.content);
-			System.out.println("-------------------");
-			System.out.println("작성자 :"+standard.memberId);
-			System.out.println("등록날짜:"+standard.regDate);
-			System.out.println("조회수:"+standard.hit);
-			System.out.println("===================");
+			printArticle(standard);
 			
-			readProcess();
+			readProcess(standard);
+			
+		}
+	}
+
+	private void printArticle(Article standard) {
+		System.out.println("===="+standard.id+"번 게시물 ====");
+		System.out.println("번호 :"+standard.id);
+	    System.out.println("제목 :"+standard.title);
+		System.out.println("-------------------");
+		System.out.println("내용 :"+standard.content);
+		System.out.println("-------------------");
+		System.out.println("작성자 :"+standard.memberId);
+		System.out.println("등록날짜:"+standard.regDate);
+		System.out.println("조회수:"+standard.hit);
+		System.out.println("===================");
+		System.out.println("========== 댓글 =========");
+		for(int i = 0; i < replies.size(); i++) {
+			Reply currentReply = replies.get(i);
+			
+			if(currentReply.parentId == standard.id) {
+				currentReply = setReplyNickname(currentReply);
+				
+				System.out.println("===="+currentReply.id+"번 게시물 ====");
+				System.out.println("내용 :"+currentReply.content);
+				System.out.println("작성자 :"+currentReply.nickname);
+				System.out.println("등록날짜:"+currentReply.regDate);
+				System.out.println("===================");
+			}
+			
 			
 		}
 		
-	}
-
-	private void printboard(Article standard,int targetNum) {
-		
 		
 	}
 
-	private void readProcess() {
+	
+
+	private Reply setReplyNickname(Reply reply) {		
+		// null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null 그대로 반환
+		if (reply != null) {
+		Members member = getMemberByMemberNo(reply.memberId);
+		reply.nickname = member.nickname;
+		}
+		return reply;
+	}
+
+	
+
+	private void readProcess(Article standard) {
 		
 		while(true) {
 			System.out.print("상세보기 기능을 선택해주세요(1. 댓글 등록, 2. 좋아요, 3. 수정, 4. 삭제, 5. 목록으로) :");
@@ -200,7 +228,7 @@ public class board {
 			
 			if(readtarget == 1) {
 				System.out.println("댓글기능");
-				reply();
+				reply(standard);
 			}
 			else if(readtarget == 2) {
 				System.out.println("좋아요 기능");
@@ -214,17 +242,21 @@ public class board {
 		
 	}
 
-	private void reply() {
+	private void reply(Article standard) {
 		System.out.print("댓글 내용을 입력해주세요 :");
 
 		String rreply = sc.nextLine();
 		int memberId = loginedmember.id;
 		String regDate = Myutill.getDate(dateFormat);
 		
-		Reply reply = new Reply(replyNum, rreply, memberId, regDate);
+		Reply reply = new Reply(replyNum, standard.id, rreply, memberId, regDate);
 		replies.add(reply);
 		
 		System.out.println("댓글이 등록되었습니다.");
+		
+		
+		printArticle(standard);
+		
 		
 		
 	}
@@ -330,20 +362,69 @@ public class board {
 		
 	}
 
-	public int standard(int targetNum) {
-		
-		for(int i = 0; i < articles.size(); i++){
-			Article currentArticle = articles.get(i);
-			if(targetNum == currentArticle.id) {
-				return i; // return하면 함수가 그 즉시 종료
+//	public int standard(int targetNum) {
+//		
+//		for(int i = 0; i < articles.size(); i++){
+//			Article currentArticle = articles.get(i);
+//			if(targetNum == currentArticle.id) {
+//				return i; // return하면 함수가 그 즉시 종료
+//			}
+//		}
+//		return -1; // 위에 반복문을 끝까지 돌았음에도 불구하고
+//				   // if문 조건이 맞지 않아서 return이 안될 수도 있다.
+//				   // 그러면 리턴하는 값이 없기때문에 실행이 안됨
+//				   // return하는 값을 넣어줘야하기때문에 -1을 넣어야함.	
+//	}
+	
+	// 게시물 데이터를 찾을 때 index가 아닌 게시물 데이터 그 자체를 찾는 것으로 변경
+		// 회원이름을 게시물에 적용시켜 조립된 상태로 얻기 위함.
+		public Article getArticleByNo1(int targetNo) {
+
+			Article targetArticle = null;
+
+			// 찾고자하는 게시물을 찾고
+			for (int i = 0; i < articles.size(); i++) {
+				Article currentArticle = articles.get(i);
+				if (targetNo == currentArticle.id) {
+					targetArticle = currentArticle;
+					break;
+				}
 			}
+
+			// 닉네임을 세팅하고
+			targetArticle = setArticleNickname(targetArticle);
+
+			// 반환
+			return targetArticle;
 		}
-		return -1; // 위에 반복문을 끝까지 돌았음에도 불구하고
-				   // if문 조건이 맞지 않아서 return이 안될 수도 있다.
-				   // 그러면 리턴하는 값이 없기때문에 실행이 안됨
-				   // return하는 값을 넣어줘야하기때문에 -1을 넣어야함.	
-		
-	}
+
+		// 게시물을 받아 해당 게시물의 작성자 번호에 맞는 작성자 닉네임을 세팅해주는 메서드
+		private Article setArticleNickname(Article article) {
+
+			// null이 아니면 게시물에 닉네임을 세팅해주고 반환 아니면 null 그대로 반환
+			if (article != null) {
+				Members member = getMemberByMemberNo(article.memberId);
+				article.nickname = member.nickname;
+			}
+
+			return article;
+		}
+
+		// 게시물 찾기와 마찬가지로 역시 회원 정보 그 자체를 찾은 것으로 변경
+		private Members getMemberByMemberNo(int memberId) {
+
+			Members targetMember = null;
+
+			for (int i = 0; i < member.size(); i++) {
+				Members currentMember = member.get(i);
+				if (memberId == currentMember.id) {
+					targetMember = currentMember;
+					break;
+				}
+			}
+
+			return targetMember;
+		}
 
 	public void list(ArrayList<Article> list) { // 매개변수로 리스트를 부여해서 중복없이 출력
 		for(int i = 0; i < list.size(); i++) {
