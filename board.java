@@ -175,7 +175,30 @@ public class board {
 			System.out.println("등록날짜:"+standard.regDate);
 			System.out.println("===================");
 			System.out.println("조회수:"+standard.hit);
+			
+			readProcess();
+			
 		}
+		
+	}
+
+	private void readProcess() {
+		
+		while(true) {
+			System.out.println("상세보기 기능을 선택해주세요(1. 댓글 등록, 2. 좋아요, 3. 수정, 4. 삭제, 5. 목록으로) :");
+			int readtarget = Integer.parseInt(sc.nextLine());
+			
+			if(readtarget == 1) {
+				System.out.println("댓글기능");
+			}
+			else if(readtarget == 2) {
+				System.out.println("좋아요 기능");
+			}
+			else if(readtarget == 5) {
+				System.out.println("목록으로");
+			}
+		}
+		
 		
 	}
 

@@ -6,8 +6,8 @@ public class Article {
 	String title;
 	String content;
 	String regDate;
-	int memberId;
-	String nickname;
+	int memberId; // 게시물을 작성한 회원을 구별하기 위한 용도
+	String nickname; // 
 	int hit;
 	
 	public Article(int id, String title, String content, String regDate, int memberId, int hit) {
