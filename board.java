@@ -9,12 +9,16 @@ public class board {
 	
 	ArrayList<Article> articles = new ArrayList<>(); 
 	ArrayList<Members> member = new ArrayList<>();
+	ArrayList<Reply> replies = new ArrayList<>();
+	
 	Members loginedmember; // 로그인 유저정보
 	
 	Scanner sc = new Scanner(System.in);
+	String dateFormat = "yyyy.MM.dd";
 	
 	int articleNum = 4; // 게시물 등록번호
 	int memberNum = 3; // 회원등록 번호
+	int replyNum = 1; //
 	
 	public board(){ //board 클래스의 생성자 이용
 		makeTestData(); // 테스트 데이터 만들기
@@ -159,6 +163,7 @@ public class board {
 		Article standard = getArticleByNo(targetNum);
 		// standard의 값을 초기화시키는 반복문 -> 거름망 역할을 함
 		
+		
 		if(standard == null) {
 			System.out.println("없는 게시물입니다.");
 		} else { 
@@ -173,8 +178,8 @@ public class board {
 			System.out.println("-------------------");
 			System.out.println("작성자 :"+standard.memberId);
 			System.out.println("등록날짜:"+standard.regDate);
-			System.out.println("===================");
 			System.out.println("조회수:"+standard.hit);
+			System.out.println("===================");
 			
 			readProcess();
 			
@@ -182,22 +187,44 @@ public class board {
 		
 	}
 
+	private void printboard(Article standard,int targetNum) {
+		
+		
+	}
+
 	private void readProcess() {
 		
 		while(true) {
-			System.out.println("상세보기 기능을 선택해주세요(1. 댓글 등록, 2. 좋아요, 3. 수정, 4. 삭제, 5. 목록으로) :");
+			System.out.print("상세보기 기능을 선택해주세요(1. 댓글 등록, 2. 좋아요, 3. 수정, 4. 삭제, 5. 목록으로) :");
 			int readtarget = Integer.parseInt(sc.nextLine());
 			
 			if(readtarget == 1) {
 				System.out.println("댓글기능");
+				reply();
 			}
 			else if(readtarget == 2) {
 				System.out.println("좋아요 기능");
 			}
 			else if(readtarget == 5) {
 				System.out.println("목록으로");
+				break;
 			}
 		}
+		
+		
+	}
+
+	private void reply() {
+		System.out.print("댓글 내용을 입력해주세요 :");
+
+		String rreply = sc.nextLine();
+		int memberId = loginedmember.id;
+		String regDate = Myutill.getDate(dateFormat);
+		
+		Reply reply = new Reply(replyNum, rreply, memberId, regDate);
+		replies.add(reply);
+		
+		System.out.println("댓글이 등록되었습니다.");
 		
 		
 	}
