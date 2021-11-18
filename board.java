@@ -13,7 +13,8 @@ public class board {
 	
 	Scanner sc = new Scanner(System.in);
 	
-	int num = 4; // 게시물 등록번호
+	int articleNum = 4; // 게시물 등록번호
+	int memberNum = 3; // 회원등록 번호
 	
 	public board(){ //board 클래스의 생성자 이용
 		makeTestData(); // 테스트 데이터 만들기
@@ -33,7 +34,9 @@ public class board {
 			if(order.equals("help")) {
 				printHelp();
 			}else if(order.equals("add")) {
-				addArticle();
+				if(isLogincheck() == true) {
+					addArticle();					
+				}
 			}else if(order.equals("list")) {
 				list(articles);
 			}else if(order.equals("update")) {
@@ -48,12 +51,30 @@ public class board {
 				signup();
 			}else if(order.equals("login")) {
 				login();
+			}else if(order.equals("logout")) {
+				if(isLogincheck() == true) {
+					logout();					
+				}
 			}
 				
 			System.out.println("================");
 		}	
 	}
+	private boolean isLogincheck() {
+		if(loginedmember == null) {
+			System.out.println("로그인이 필요한 기능입니다.");
+			return false;
+		}
+		return true;
+	}
 	
+	private void logout() {
+		
+		loginedmember = null;
+		System.out.println("로그아웃 되었습니다.");
+		
+	}
+
 	private void login() {
 		System.out.print("아이디:");
 		String loginId = sc.nextLine();
@@ -87,11 +108,11 @@ public class board {
 		System.out.print("닉네임을 입력해주세요 :");
 		String nickname = sc.nextLine();
 		
-		Members members = new Members(loginId, loginPw, nickname);
+		Members members = new Members( memberNum,loginId, loginPw, nickname);
 		member.add(members);
 		
 	    System.out.println("==== 회원가입이 완료되었습니다. ====");
-		
+	    memberNum++;
 	}
 
 	private void readArticle() {
@@ -114,7 +135,7 @@ public class board {
 			System.out.println("-------------------");
 			System.out.println("내용 :"+article.content);
 			System.out.println("-------------------");
-			System.out.println("작성자 :"+article.writer);
+			System.out.println("작성자 :"+article.memberId);
 			System.out.println("등록날짜:"+article.regDate);
 			System.out.println("===================");
 			System.out.println("조회수:"+article.hit);
@@ -124,12 +145,13 @@ public class board {
 
 	private void makeTestData() {
 		String currentDate = Myutill.getDate("yyyy-MM-dd");
-		articles.add(new Article(1, "안녕하세요", "내용1입니다.",currentDate, "윤태섭", 0));
-		articles.add(new Article(2, "반갑하세요", "내용2입니다.",currentDate, "광폭철", 0));
-		articles.add(new Article(3, "안녕안녕", "내용3입니다.",currentDate, "dbsxotjq", 0));
-		member.add(new Members("dbsxotjq","dbsxotjq","dbsxotjq") );
-		member.add(new Members("광폭철","광폭철","광폭철") );
+		articles.add(new Article(1, "안녕하세요", "내용1입니다.",currentDate, 1, 0));
+		articles.add(new Article(2, "반갑하세요", "내용2입니다.",currentDate, 2, 0));
+		articles.add(new Article(3, "안녕안녕", "내용3입니다.",currentDate, 1, 0));
+		member.add(new Members(1,"dbsxotjq","dbsxotjq","dbsxotjq") );
+		member.add(new Members(2,"광폭철","광폭철","광폭철") );
 		
+		loginedmember = member.get(0); //dbsxotjq으로 로그인 돼있음!!!
 	}
 
 	private void searchArticle() {
@@ -183,8 +205,8 @@ public class board {
 			String content = sc.nextLine();
 			
 			
-			Article article = new Article(targetNum, title, content,"2021.11.15", "익명", 0);
-			articles.set(standard, article);
+			//Article article = new Article(targetNum, title, content,"2021.11.15", loginedmember.id, 0);
+			//articles.set(standard, article);
 			
 			
 			System.out.println("수정이 완료되었습니다.");
@@ -196,6 +218,7 @@ public class board {
 	}
 
 	private void addArticle() {
+		
 		System.out.print("제목을 입력해주세요:");
 		String title = sc.nextLine();
 		
@@ -203,10 +226,10 @@ public class board {
 		String content = sc.nextLine();
 		
 		String currentDate = Myutill.getDate("yyyy.MM.dd");
-		Article article = new Article(num, title, content,currentDate, "익명", 0);
+		Article article = new Article(articleNum, title, content,currentDate, loginedmember.id, 0);
 		articles.add(article);
 	
-		num++; // 게시물 등록번호 자동증가
+		articleNum++; // 게시물 등록번호 자동증가
 		
 		System.out.println("게시물이 저장되었습니다.");
 		
@@ -242,7 +265,7 @@ public class board {
 			System.out.println("제목 :" + list.get(i).title);
 			//System.out.println("내용 :" + list.get(i).content);
 			System.out.println("등록날짜 :" + list.get(i).regDate);
-			System.out.println("작성자 :" + list.get(i).writer);
+			System.out.println("작성자 :" + list.get(i).memberId);
 			System.out.println("조회수 :" + list.get(i).hit);
 			
 			System.out.println("----------------");
