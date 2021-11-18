@@ -60,6 +60,42 @@ public class board {
 			System.out.println("================");
 		}	
 	}
+	public Article getArticleByNo(int targetNo) {
+		
+		Article targetArticle = null;
+		
+		for(int i = 0; i < articles.size(); i++) {
+			Article currentArticle = articles.get(i);
+			if(targetNo == currentArticle.id) {
+				targetArticle = currentArticle;
+				break;
+			}
+		}
+		
+		if(targetArticle != null) {
+			Members writer = getmemberBymemberNo(targetArticle.memberId);
+			targetArticle.nickname = writer.nickname;			
+		}
+		
+		return targetArticle;
+	}
+	
+	private Members getmemberBymemberNo(int memberId) {
+		
+		Members targetMember = null;
+		
+		for(int i = 0; i < member.size(); i++) {
+			Members currentMember = member.get(i);
+			if(memberId ==  currentMember.id) {
+				targetMember = currentMember;
+				break;
+			}
+		}
+		
+		return targetMember;
+		
+	}
+
 	private boolean isLogincheck() {
 		if(loginedmember == null) {
 			System.out.println("로그인이 필요한 기능입니다.");
@@ -118,35 +154,35 @@ public class board {
 	private void readArticle() {
 		System.out.print("상세보기할 게시물 번호를 입력해주세요:");
 		int targetNum = Integer.parseInt(sc.nextLine());
-		
-		int standard = standard(targetNum);
+						
+						
+		Article standard = getArticleByNo(targetNum);
 		// standard의 값을 초기화시키는 반복문 -> 거름망 역할을 함
 		
-		if(standard == -1) {
+		if(standard == null) {
 			System.out.println("없는 게시물입니다.");
 		} else { 
-			Article article = articles.get(standard);
 			
-			article.hit++; //조회수 증가
+			standard.hit++; //조회수 증가
 			
 			System.out.println("===="+targetNum+"번 게시물 ====");
-			System.out.println("번호 :"+article.id);
-		    System.out.println("제목 :"+article.title);
+			System.out.println("번호 :"+standard.id);
+		    System.out.println("제목 :"+standard.title);
 			System.out.println("-------------------");
-			System.out.println("내용 :"+article.content);
+			System.out.println("내용 :"+standard.content);
 			System.out.println("-------------------");
-			System.out.println("작성자 :"+article.memberId);
-			System.out.println("등록날짜:"+article.regDate);
+			System.out.println("작성자 :"+standard.memberId);
+			System.out.println("등록날짜:"+standard.regDate);
 			System.out.println("===================");
-			System.out.println("조회수:"+article.hit);
+			System.out.println("조회수:"+standard.hit);
 		}
 		
 	}
 
 	private void makeTestData() {
 		String currentDate = Myutill.getDate("yyyy-MM-dd");
-		articles.add(new Article(1, "안녕하세요", "내용1입니다.",currentDate, 1, 0));
-		articles.add(new Article(2, "반갑하세요", "내용2입니다.",currentDate, 2, 0));
+		articles.add(new Article(1, "안녕하세요", "내용1입니다.",currentDate, 1,0));
+		articles.add(new Article(2, "반갑하세요", "내용2입니다.",currentDate, 2,0));
 		articles.add(new Article(3, "안녕안녕", "내용3입니다.",currentDate, 1, 0));
 		member.add(new Members(1,"dbsxotjq","dbsxotjq","dbsxotjq") );
 		member.add(new Members(2,"광폭철","광폭철","광폭철") );
@@ -173,9 +209,9 @@ public class board {
 		System.out.println("삭제할 게시물 번호:");
 		int targetNum = Integer.parseInt(sc.nextLine());
 		
-		int standard = standard(targetNum);
+		Article standard = getArticleByNo(targetNum);
 	
-		if(standard == -1) {
+		if(standard == null) {
 			System.out.println("없는 게시물 번호 입니다.");
 		} else {
 			
@@ -193,10 +229,11 @@ public class board {
 		System.out.print("수정할 게시물 번호:");
 		int targetNum = Integer.parseInt(sc.nextLine());
 		
-		int standard = standard(targetNum);
+		Article standard = getArticleByNo(targetNum);
+		
 		// standard의 값을 초기화시키는 반복문 -> 거름망 역할을 함
 		
-		if(standard == -1) {
+		if(standard == null) {
 			System.out.println("없는 게시물입니다.");
 		} else {
 			System.out.print("제목:");
@@ -204,9 +241,8 @@ public class board {
 			System.out.print("내용:");
 			String content = sc.nextLine();
 			
-			
-			//Article article = new Article(targetNum, title, content,"2021.11.15", loginedmember.id, 0);
-			//articles.set(standard, article);
+			standard.title = title;
+			standard.content = content;
 			
 			
 			System.out.println("수정이 완료되었습니다.");

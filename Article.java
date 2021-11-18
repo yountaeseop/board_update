@@ -7,6 +7,7 @@ public class Article {
 	String content;
 	String regDate;
 	int memberId;
+	String nickname;
 	int hit;
 	
 	public Article(int id, String title, String content, String regDate, int memberId, int hit) {
